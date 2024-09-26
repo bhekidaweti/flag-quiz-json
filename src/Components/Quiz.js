@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { flags } from './flag-obj';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
 
 const Quiz = () => {
   const [score, setScore] = useState(parseInt(sessionStorage.getItem('score')) || 0);
@@ -11,17 +9,23 @@ const Quiz = () => {
   const [correctAnswerSelected, setCorrectAnswerSelected] = useState(false);
   const [options, setOptions] = useState([]);
   const [gamePaused, setGamePaused] = useState(false);
-  const timerIntervalRef = useRef(null); // Ref to store interval ID
+  const timerIntervalRef = useRef(null);
 
-  useEffect(() => {
-    if (!gamePaused) {
-      loadNextFlag();
-    }
-    return () => clearInterval(timerIntervalRef.current); // Clear timer on component unmount
-  }, [gamePaused]);
+  const resetGame = useCallback(() => {
+    sessionStorage.removeItem('score');
+    setScore(0);
+    setCorrectAnswerSelected(false);
+    setGamePaused(false);
+    loadNextFlag(); // Start fresh game
+  }, []);
 
-  const startTimer = () => {
-    clearInterval(timerIntervalRef.current); // Clear any previous timer
+  const handleTimeUp = useCallback(() => {
+    alert("Time's up! Game over");
+    resetGame();
+  }, [resetGame]);
+
+  const startTimer = useCallback(() => {
+    clearInterval(timerIntervalRef.current);
     timerIntervalRef.current = setInterval(() => {
       setTimer((prevTime) => {
         if (prevTime <= 1) {
@@ -32,14 +36,9 @@ const Quiz = () => {
         return prevTime - 1;
       });
     }, 1000);
-  };
+  }, [handleTimeUp]);
 
-  const handleTimeUp = () => {
-    alert("Time's up! Game over");
-    resetGame();
-  };
-
-  const getRandomFlags = (flagList, correctFlag, numberOfOptions = 4) => {
+  const getRandomFlags = useCallback((flagList, correctFlag, numberOfOptions = 4) => {
     const shuffledFlags = [...flagList].sort(() => 0.5 - Math.random());
     let selectedFlags = shuffledFlags.slice(0, numberOfOptions);
 
@@ -50,20 +49,26 @@ const Quiz = () => {
     }
 
     return selectedFlags;
-  };
+  }, []);
 
-  const loadNextFlag = () => {
+  const loadNextFlag = useCallback(() => {
     setCorrectAnswerSelected(false);
     const randomFlag = flags[Math.floor(Math.random() * flags.length)];
     setCurrentFlag(randomFlag);
 
-    // Get 4 random flags, including the correct one
     const randomOptions = getRandomFlags(flags, randomFlag);
     setOptions(randomOptions);
 
-    setTimer(15); // Reset the timer to 15 seconds
-    startTimer(); // Start the timer
-  };
+    setTimer(15);
+    startTimer();
+  }, [getRandomFlags, startTimer]);
+
+  useEffect(() => {
+    if (!gamePaused) {
+      loadNextFlag();
+    }
+    return () => clearInterval(timerIntervalRef.current);
+  }, [gamePaused, loadNextFlag]);
 
   const handleFlagClick = (countryName) => {
     if (correctAnswerSelected) {
@@ -77,43 +82,35 @@ const Quiz = () => {
         sessionStorage.setItem('score', newScore);
         return newScore;
       });
-      clearInterval(timerIntervalRef.current); // Stop the timer
+      clearInterval(timerIntervalRef.current);
       setCorrectAnswerSelected(true);
       alert("Correct! You selected the right flag.");
       setTimeout(loadNextFlag, 1000); // Automatically load next question after 1 second
     } else {
       alert("Incorrect. Please try again.");
-      clearInterval(timerIntervalRef.current); // Stop the timer
+      clearInterval(timerIntervalRef.current);
     }
   };
 
-  const resetGame = () => {
-    sessionStorage.removeItem('score');
-    setScore(0);
-    setCorrectAnswerSelected(false);
-    setGamePaused(false);
-    loadNextFlag(); // Start fresh game
-  };
-
   const quitGame = () => {
-    setGamePaused(true); // Pauses the game
-    clearInterval(timerIntervalRef.current); // Clear the timer
+    setGamePaused(true);
+    clearInterval(timerIntervalRef.current);
     if (window.confirm("Are you sure you want to quit the game?")) {
       resetGame();
     } else {
-      setGamePaused(false); // Resume the game if user cancels
-      startTimer(); // Resume the timer
+      setGamePaused(false);
+      startTimer();
     }
   };
 
   const pauseGame = () => {
-    setGamePaused(true); // Pauses the game
-    clearInterval(timerIntervalRef.current); // Stop the timer
+    setGamePaused(true);
+    clearInterval(timerIntervalRef.current);
   };
 
   const continueGame = () => {
-    setGamePaused(false); // Resumes the game
-    startTimer(); // Resume the timer
+    setGamePaused(false);
+    startTimer();
   };
 
   return (
@@ -153,3 +150,4 @@ const Quiz = () => {
 };
 
 export default Quiz;
+
