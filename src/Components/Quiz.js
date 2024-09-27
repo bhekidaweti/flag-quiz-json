@@ -11,18 +11,10 @@ const Quiz = () => {
   const [gamePaused, setGamePaused] = useState(false);
   const timerIntervalRef = useRef(null);
 
-  const resetGame = useCallback(() => {
-    sessionStorage.removeItem('score');
-    setScore(0);
-    setCorrectAnswerSelected(false);
-    setGamePaused(false);
-    loadNextFlag(); // Start fresh game
-  }, []);
-
   const handleTimeUp = useCallback(() => {
     alert("Time's up! Game over");
-    resetGame();
-  }, [resetGame]);
+    
+  }, []);
 
   const startTimer = useCallback(() => {
     clearInterval(timerIntervalRef.current);
@@ -62,6 +54,16 @@ const Quiz = () => {
     setTimer(15);
     startTimer();
   }, [getRandomFlags, startTimer]);
+
+  const resetGame = useCallback(() => {
+    sessionStorage.removeItem('score');
+    setScore(0);
+    setCorrectAnswerSelected(false);
+    setGamePaused(false);
+    loadNextFlag(); // Start fresh game
+  }, [loadNextFlag]);
+
+
 
   useEffect(() => {
     if (!gamePaused) {
