@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { flags } from './flag-obj';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock, faPause, faPlay, faStar, faStop } from '@fortawesome/free-solid-svg-icons';
 
 const Quiz = () => {
   const [score, setScore] = useState(parseInt(sessionStorage.getItem('score')) || 0);
@@ -116,19 +118,23 @@ const Quiz = () => {
   };
 
   return (
-    <div className="quiz-container">
-      <h1>Flag Quiz</h1>
-      <div className="score-timer">
-        <button id='score' className='btn btn-secondary'><span>Score: {score}</span></button>
-        <button id='time' className='btn btn-secondary'><span>Time left: {timer}s</span></button>
-      </div>
+    <div className="container quiz-container">
+      <div className="row align-items-start">
+        <div className='col first-div'>
+        </div>
+      <div className='col'>
+                <h1>Flag Quiz</h1>
+            <div className="score-timer">
+                <button id='score' className='btn btn-secondary'><span><FontAwesomeIcon icon={faStar}/>: {score}</span></button>
+                <button id='time' className='btn btn-secondary'><span><FontAwesomeIcon icon={faClock}/>: {timer}s</span></button>
+            </div>
       <div className="quiz-content">
         <div className="country-name">
           <button id="correct_country_button" className="btn btn-success">
             {currentFlag.country}
           </button>
         </div>
-        <div className="flag-list">
+        <div className="flag-choice">
           {options.map((flag, index) => (
             <div key={index} className="flag-item" onClick={() => handleFlagClick(flag.country)}>
               <img src={flag.image} alt={flag.country} />
@@ -138,15 +144,19 @@ const Quiz = () => {
       </div>
       {!gamePaused && (
         <>
-          <button className="btn btn-primary" onClick={loadNextFlag}>Continue</button>
-          <button className="btn btn-danger" onClick={quitGame}>Quit</button>
-          <button className="btn btn-warning" onClick={pauseGame}>Pause</button>
+          <button className="btn btn-primary" onClick={loadNextFlag}><FontAwesomeIcon icon={faPlay}/></button>
+          <button className="btn btn-danger" onClick={quitGame}><FontAwesomeIcon icon={faStop}/></button>
+          <button className="btn btn-warning" onClick={pauseGame}><FontAwesomeIcon icon={faPause}/></button>
         </>
       )}
       {gamePaused && (
         <button className="btn btn-success" onClick={continueGame}>Resume</button>
       )}
-      <button className="btn btn-primary" onClick={resetGame}>Restart</button>
+    </div>
+    <div className='col last-div'>
+
+    </div>
+    </div>
     </div>
   );
 };

@@ -1,10 +1,18 @@
-.quiz-content, .flag-quiz, .home-container, .flag-container, .quiz-container {
+.quiz-content, .flag-quiz, .home-container, .flag-container {
   text-align: center;
 }
-.home-container{
-  font-size: xx-large;
+.welcome{
+  font-size: x-large;
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
 }
+.quiz-container{
+  background-color: goldenrod;
+}
+
+.first-div, .last-div  {
+ background-color: rgb(7, 7, 7);
+}
+
 .footer {
   margin: 150px;
 }
@@ -34,15 +42,23 @@ nav ul li a {
 nav ul li a:hover {
   text-decoration: underline;
 }
+.flag-list{
+  background-color: rgb(82, 51, 51);
+  color: white;
+}
 
 .flag-list img {
-  width: 100px;
+  width: 70px;
+  height: auto;
+}
+.flag-choice img{
+  width: 80px;
   height: auto;
 }
 
 .flag-item {
   display: inline-block;
-  margin: 10px;
+  margin: 3px;
   
 }
 
