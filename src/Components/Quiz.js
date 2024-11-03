@@ -124,6 +124,8 @@ const Quiz = () => {
         </div>
       <div className='col'>
                 <h1>Flag Quiz</h1>
+    Click the correct flag image from the 4 images corresponding to the country name given below before the time is up.<br> 
+      Use the icons to stop and/or resume the quiz.
             <div className="score-timer">
                 <button id='score' className='btn btn-secondary'><span><FontAwesomeIcon icon={faStar}/>: {score}</span></button>
                 <button id='time' className='btn btn-secondary'><span><FontAwesomeIcon icon={faClock}/>: {timer}s</span></button>
