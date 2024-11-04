@@ -124,6 +124,7 @@ const Quiz = () => {
         </div>
       <div className='col'>
                 <h1>Flag Quiz</h1>
+            <p className='quiz-start'>Click the correct flag from the four flags provided that correspond to the the country name given below</p>
             <div className="score-timer">
                 <button id='score' className='btn btn-secondary'><span><FontAwesomeIcon icon={faStar}/>: {score}</span></button>
                 <button id='time' className='btn btn-secondary'><span><FontAwesomeIcon icon={faClock}/>: {timer}s</span></button>
