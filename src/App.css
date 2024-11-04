@@ -1,7 +1,7 @@
 .quiz-content, .flag-quiz, .home-container, .flag-container {
   text-align: center;
 }
-.welcome{
+.welcome, .quiz-start{
   font-size: x-large;
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
 }
