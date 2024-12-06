@@ -65,7 +65,13 @@ const Quiz = () => {
     loadNextFlag(); // Start fresh game
   }, [loadNextFlag]);
 
-
+//Attempting to call resetGame after Time's up!
+//Implementation succesful rendering 05/12/2024
+  useEffect(() =>{
+    if(timer < 1){
+      return resetGame();
+    }
+  }, [resetGame, timer]);
 
   useEffect(() => {
     if (!gamePaused) {
@@ -145,9 +151,9 @@ const Quiz = () => {
       </div>
       {!gamePaused && (
         <>
-          <button className="btn btn-primary" onClick={loadNextFlag}><FontAwesomeIcon icon={faPlay}/></button>
-          <button className="btn btn-danger" onClick={quitGame}><FontAwesomeIcon icon={faStop}/></button>
-          <button className="btn btn-warning" onClick={pauseGame}><FontAwesomeIcon icon={faPause}/></button>
+          <button className="btn btn-primary" onClick={loadNextFlag}><FontAwesomeIcon icon={faPlay}/>Play</button>
+          <button className="btn btn-danger" onClick={quitGame}><FontAwesomeIcon icon={faStop}/>End</button>
+          <button className="btn btn-warning" onClick={pauseGame}><FontAwesomeIcon icon={faPause}/>Pause</button>
         </>
       )}
       {gamePaused && (
