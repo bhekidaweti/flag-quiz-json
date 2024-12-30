@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="footer">
           <ul className="nav justify-content-center">
             
-            <li>Developed with &#128151; by<a href="https://bheki.co.uk">Bheki</a></li>
+            <li>Developed with &#128151; by<a href="https://bheki.co.uk"> Bheki Daweti</a></li>
           </ul>
           <hr></hr>
           
