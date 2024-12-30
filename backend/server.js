@@ -18,8 +18,7 @@ app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 
 const adminUsername = process.env.REACT_APP_USERNAME;
-const adminHashedPassword = process.env.REACT_APP_PASSWORD; // This should be the hashed password stored in the .env file
-
+const adminHashedPassword = process.env.REACT_APP_PASSWORD; 
 // Middleware for token authentication
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];

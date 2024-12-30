@@ -16,10 +16,10 @@ function AdminPostForm({ token }) {
   const mdParser = new MarkdownIt(); // Markdown parser
 
   const API_URL = process.env.REACT_APP_API_URL
-  
+
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get("`${API_URL}/api/blogs`");
+      const response = await axios.get(`${API_URL}/api/blogs`);
       setBlogs(response.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
