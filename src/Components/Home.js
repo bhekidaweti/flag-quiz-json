@@ -5,15 +5,14 @@ import React from "react";
 const Home = () => {
     return (
         <div className="container" style={{backgroundColor: "bisque"}}>
-                    <div className="welcome">
+                    <section className="welcome">
                         Welcome to the flags quiz game where you can test your world flags knowledge and also 
                         learn about national flags of different countries or nations.<br></br>
                         You can play the quiz by clicking the "play" icon. <br></br>
                         To view the list of country flags you can click on the "list" icon. 
-                    </div>
+                    </section>
         </div>
     )
 }
 
 export default Home;
-
