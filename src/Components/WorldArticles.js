@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MarkdownIt from "markdown-it";
 
+
+const API_URL = process.env.REACT_APP_API_URL
+
 function WorldArticles() {
   const [blogs, setBlogs] = useState([]);
   const [selectedBlogId, setSelectedBlogId] = useState(null); // Track the selected blog ID
@@ -10,7 +13,7 @@ function WorldArticles() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/blogs");
+        const response = await axios.get(`${API_URL}/api/blogs`);
         setBlogs(response.data);
       } catch (error) {
         console.error("Error fetching blogs:", error);
@@ -43,7 +46,7 @@ function WorldArticles() {
               ></div>
               {blog.image && (
                 <img
-                  src={`http://localhost:5000${blog.image}`}
+                  src={`${API_URL}${blog.image}`}
                   alt={blog.title}
                   style={{ maxWidth: "100%" }}
                 />

@@ -15,9 +15,11 @@ function AdminPostForm({ token }) {
 
   const mdParser = new MarkdownIt(); // Markdown parser
 
+  const API_URL = process.env.REACT_APP_API_URL
+  
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/blogs");
+      const response = await axios.get("`${API_URL}/api/blogs`");
       setBlogs(response.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
@@ -40,7 +42,7 @@ function AdminPostForm({ token }) {
       if (editingBlog) {
         // Update blog
         const response = await axios.put(
-          `http://localhost:5000/api/blogs/${editingBlog._id}`,
+          `${API_URL}/api/blogs/${editingBlog._id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
@@ -49,7 +51,7 @@ function AdminPostForm({ token }) {
         setMessage(response.data.message);
       } else {
         // Create new blog
-        const response = await axios.post("http://localhost:5000/api/blogs", formData, {
+        const response = await axios.post(`${API_URL}/api/blogs`, formData, {
           headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
         });
         setMessage(response.data.message);
@@ -79,7 +81,7 @@ function AdminPostForm({ token }) {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/api/blogs/${id}`, {
+      const response = await axios.delete(`${API_URL}/api/blogs/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMessage(response.data.message);
