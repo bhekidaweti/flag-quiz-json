@@ -28,7 +28,7 @@ function AdminPostForm({ token }) {
 
   useEffect(() => {
     fetchBlogs();
-  }, []);
+  }, [fetchBlogs]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
