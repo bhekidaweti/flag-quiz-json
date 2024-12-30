@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faPause, faPlay, faStar, faStop } from '@fortawesome/free-solid-svg-icons';
 
-const Quiz = () => {
+const Quiz = ( { onNavigate } ) => {
   const [score, setScore] = useState(parseInt(sessionStorage.getItem('score')) || 0);
   const [currentFlag, setCurrentFlag] = useState({});
   const [timer, setTimer] = useState(15);
@@ -12,10 +12,11 @@ const Quiz = () => {
   const [options, setOptions] = useState([]);
   const [gamePaused, setGamePaused] = useState(false);
   const timerIntervalRef = useRef(null);
+  const [highScore, setHighScore] = useState(parseInt(sessionStorage.getItem('highScore')) || 0);
+
 
   const handleTimeUp = useCallback(() => {
-    alert("Time's up! Game over");
-    
+    alert("Time's up! Game over 🤔");
   }, []);
 
   const startTimer = useCallback(() => {
@@ -36,7 +37,6 @@ const Quiz = () => {
     const shuffledFlags = [...flagList].sort(() => 0.5 - Math.random());
     let selectedFlags = shuffledFlags.slice(0, numberOfOptions);
 
-    // Ensure the correct flag is included
     if (!selectedFlags.includes(correctFlag)) {
       const randomIndex = Math.floor(Math.random() * numberOfOptions);
       selectedFlags[randomIndex] = correctFlag;
@@ -58,21 +58,13 @@ const Quiz = () => {
   }, [getRandomFlags, startTimer]);
 
   const resetGame = useCallback(() => {
-    sessionStorage.removeItem('score');
+    sessionStorage.setItem('highScore', Math.max(highScore, score));
+    setHighScore((prevHighScore) => Math.max(prevHighScore, score));
     setScore(0);
     setCorrectAnswerSelected(false);
     setGamePaused(false);
-    loadNextFlag(); // Start fresh game
-  }, [loadNextFlag]);
-
-
-
-  useEffect(() => {
-    if (!gamePaused) {
-      loadNextFlag();
-    }
-    return () => clearInterval(timerIntervalRef.current);
-  }, [gamePaused, loadNextFlag]);
+    clearInterval(timerIntervalRef.current);
+  }, [highScore, score]);
 
   const handleFlagClick = (countryName) => {
     if (correctAnswerSelected) {
@@ -81,26 +73,23 @@ const Quiz = () => {
     }
 
     if (countryName === currentFlag.country) {
-      setScore((prevScore) => {
-        const newScore = prevScore + 1;
-        sessionStorage.setItem('score', newScore);
-        return newScore;
-      });
+      setScore((prevScore) => prevScore + 1);
       clearInterval(timerIntervalRef.current);
       setCorrectAnswerSelected(true);
-      alert("Correct! You selected the right flag.");
-      setTimeout(loadNextFlag, 1000); // Automatically load next question after 1 second
+      alert("Correct! You selected the right flag. 🙂");
+      setTimeout(loadNextFlag, 1000);
     } else {
-      alert("Incorrect. Please try again.");
-      clearInterval(timerIntervalRef.current);
+      alert("Incorrect. Game over! 😮");
+      resetGame();
     }
   };
 
   const quitGame = () => {
     setGamePaused(true);
     clearInterval(timerIntervalRef.current);
-    if (window.confirm("Are you sure you want to quit the game?")) {
-      resetGame();
+    if (window.confirm("Are you sure you want to quit the game? 🙄")) {
+      sessionStorage.setItem('highScore', Math.max(highScore, score));
+      onNavigate("/");
     } else {
       setGamePaused(false);
       startTimer();
@@ -115,52 +104,70 @@ const Quiz = () => {
   const continueGame = () => {
     setGamePaused(false);
     startTimer();
+    loadNextFlag();
   };
+
+  useEffect(() => {
+    loadNextFlag();
+    return () => clearInterval(timerIntervalRef.current);
+  }, [loadNextFlag]);
 
   return (
     <div className="container quiz-container">
-      <div className="row align-items-start">
-        <div className='col first-div'>
-        </div>
-      <div className='col'>
-                <h1>Flag Quiz</h1>
-            <p className='quiz-start'>Click the correct flag from the four flags provided that correspond to the the country name given below</p>
-            <div className="score-timer">
-                <button id='score' className='btn btn-secondary'><span><FontAwesomeIcon icon={faStar}/>: {score}</span></button>
-                <button id='time' className='btn btn-secondary'><span><FontAwesomeIcon icon={faClock}/>: {timer}s</span></button>
-            </div>
-      <div className="quiz-content">
-        <div className="country-name">
-          <button id="correct_country_button" className="btn btn-success">
-            {currentFlag.country}
-          </button>
-        </div>
-        <div className="flag-choice">
-          {options.map((flag, index) => (
-            <div key={index} className="flag-item" onClick={() => handleFlagClick(flag.country)}>
-              <img src={flag.image} alt={flag.country} />
-            </div>
-          ))}
-        </div>
+      <h1>Flag Quiz</h1>
+      <p className="quiz-start">
+        Click the correct flag from the four flags provided that correspond to the country name given below.
+      </p>
+      <div className="score-timer">
+        <button id="score" className="btn btn-secondary">
+          <FontAwesomeIcon icon={faStar} /> Score: {score}
+        </button>
+        <button id="high-score" className="btn btn-warning">
+          High Score: {highScore}
+        </button>
+        <button id="time" className="btn btn-secondary">
+          <FontAwesomeIcon icon={faClock} /> {timer}s
+        </button>
       </div>
       {!gamePaused && (
         <>
-          <button className="btn btn-primary" onClick={loadNextFlag}><FontAwesomeIcon icon={faPlay}/></button>
-          <button className="btn btn-danger" onClick={quitGame}><FontAwesomeIcon icon={faStop}/></button>
-          <button className="btn btn-warning" onClick={pauseGame}><FontAwesomeIcon icon={faPause}/></button>
+          <button className="btn btn-primary" onClick={loadNextFlag}>
+            <FontAwesomeIcon icon={faPlay} /> Play
+          </button>
+          <button className="btn btn-danger" onClick={quitGame}>
+            <FontAwesomeIcon icon={faStop} /> Quit
+          </button>
+          <button className="btn btn-warning" onClick={pauseGame}>
+            <FontAwesomeIcon icon={faPause} /> Pause
+          </button>
         </>
       )}
       {gamePaused && (
-        <button className="btn btn-success" onClick={continueGame}>Resume</button>
+        <div className="stop-game">
+          <div className="alert alert-success">
+            <strong>Game Paused!</strong> Click Play to continue.
+          </div>
+          <button className="btn btn-primary" onClick={continueGame}>
+            <FontAwesomeIcon icon={faPlay} /> Play
+          </button>
+        </div>
       )}
-    </div>
-    <div className='col last-div'>
-
-    </div>
-    </div>
+      {!gamePaused && (
+        <div className="quiz-content">
+          <div className="country-name">
+            <button className="btn btn-success">{currentFlag.country}</button>
+          </div>
+          <div className="flag-choice">
+            {options.map((flag, index) => (
+              <div key={index} className="flag-item" onClick={() => handleFlagClick(flag.country)}>
+                <img src={flag.image} alt={flag.country} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default Quiz;
-
