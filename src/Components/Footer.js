@@ -1,9 +1,4 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCode } from "@fortawesome/free-solid-svg-icons";
-
-
-
 
 
 const Footer = () => {
@@ -12,7 +7,7 @@ const Footer = () => {
         <div className="footer">
           <ul className="nav justify-content-center">
             
-            <li><a href="https://bheki.co.uk">< FontAwesomeIcon icon={faCode} /> Dev Portfolio</a></li>
+            <li>Developed with &#128151; by<a href="https://bheki.co.uk">Bheki</a></li>
           </ul>
           <hr></hr>
           
