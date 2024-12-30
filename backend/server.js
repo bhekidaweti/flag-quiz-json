@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptj');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const multer = require('multer');
@@ -10,7 +10,7 @@ const path = require("path");
 const app = express();
 // Serve static files from the React app
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use(cors({ origin: 'http://localhost:3000',
+app.use(cors({ origin: 'https://funwithworldflags.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
  }));
@@ -34,7 +34,7 @@ const authenticateToken = (req, res, next) => {
 };
 
 // MongoDB Connection
-const mongoURI = process.env.MONGO_URI || 'mongodb+srv://mongo-user:yFGtNVBNwqB7Y9AA@fun.0yi5x.mongodb.net/?retryWrites=true&w=majority&appName=Fun';
+const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
