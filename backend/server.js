@@ -4,18 +4,19 @@ const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const session = require('express-session');
-const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 const path = require("path");
+const bodyParser = require('body-parser');
 
 const app = express();
 
 // Middleware setup
-app.use(cookieParser()); // To parse cookies
 app.use(cors({ origin: 'https://funwithworldflags.com',
- methods: ['GET', 'POST', 'PUT', 'DELETE'], allowedHeaders: ['Content-Type', 'Authorization'] }));
-app.use(express.json()); // For parsing application/json
-app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], allowedHeaders: ['Content-Type', 'Authorization'] }));
+app.use(bodyParser.json()); // For parsing application/json
+
 
 // Session Setup
 app.use(session({

@@ -19,7 +19,9 @@ function AdminPostForm() {
 
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/blogs`);
+      const response = await axios.get(`${API_URL}/api/blogs`, {
+        headers: { "Content-Type": "application/json" }
+      });
       setBlogs(response.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
@@ -46,6 +48,7 @@ function AdminPostForm() {
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
+            withCredentials: true,
           }
         );
         setMessage(response.data.message);
@@ -53,6 +56,7 @@ function AdminPostForm() {
         // Create new blog
         const response = await axios.post(`${API_URL}/api/blogs`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
         });
         setMessage(response.data.message);
       }
@@ -81,7 +85,8 @@ function AdminPostForm() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`${API_URL}/api/blogs/${id}`);
+      const response = await axios.delete(`${API_URL}/api/blogs/${id}`,
+        {withCredentials: true});
       setMessage(response.data.message);
       fetchBlogs(); // Refresh the list of blogs
     } catch (error) {
