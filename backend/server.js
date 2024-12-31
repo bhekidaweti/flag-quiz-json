@@ -1,36 +1,32 @@
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const path = require("path");
 
 const app = express();
-// Serve static files from the React app
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Middleware setup
+app.use(cookieParser()); // To parse cookies
 app.use(cors({ origin: 'https://funwithworldflags.com',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
- }));
+ methods: ['GET', 'POST', 'PUT', 'DELETE'], allowedHeaders: ['Content-Type', 'Authorization'] }));
 app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 
+// Session Setup
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 3600000 }, // 1 hour
+}));
+
 const adminUsername = process.env.REACT_APP_USERNAME;
 const adminHashedPassword = process.env.REACT_APP_PASSWORD; 
-// Middleware for token authentication
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (token == null) return res.sendStatus(401);
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-};
 
 // MongoDB Connection
 const mongoURI = process.env.MONGO_URI;
@@ -52,21 +48,24 @@ const Blog = mongoose.model("Blog", blogSchema);
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
 
-  // Check if the username matches the stored one
   if (username === adminUsername) {
-    // Compare the password with the stored hash
     const isMatch = await bcrypt.compare(password, adminHashedPassword);
-
     if (isMatch) {
-      // Password matches, create a JWT token
-      const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: "1h" });
-      return res.status(200).json({ token });
+      // Set user session
+      req.session.user = { username }; // Save session data
+      return res.status(200).json({ message: "Logged in successfully" });
     }
   }
-
-  // If username doesn't match or password is incorrect
   return res.status(401).json({ error: "Invalid username or password" });
 });
+
+// Middleware to check for session authentication
+const authenticateSession = (req, res, next) => {
+  if (!req.session.user) {
+    return res.status(401).send('Unauthorized');
+  }
+  next();
+};
 
 // Multer Configuration
 const storage = multer.diskStorage({
@@ -79,14 +78,13 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // POST Route for Creating a Blog
-app.post("/api/blogs", authenticateToken, upload.single("image"), async (req, res) => {
+app.post("/api/blogs", authenticateSession, upload.single("image"), async (req, res) => {
   try {
     const { title, content } = req.body;
     const image = req.file ? `/uploads/${req.file.filename}` : null;
 
     const blog = new Blog({ title, content, image });
     await blog.save();
-
     res.status(201).json({ message: "Blog created successfully!" });
   } catch (error) {
     res.status(500).json({ error: "Failed to create blog" });
@@ -117,7 +115,7 @@ app.get("/api/blogs/:id", async (req, res) => {
 });
 
 // PUT Route for Updating a Blog by ID
-app.put("/api/blogs/:id", authenticateToken, upload.single("image"), async (req, res) => {
+app.put("/api/blogs/:id", authenticateSession, upload.single("image"), async (req, res) => {
   try {
     const { title, content } = req.body;
     const image = req.file ? `/uploads/${req.file.filename}` : null;
@@ -139,22 +137,17 @@ app.put("/api/blogs/:id", authenticateToken, upload.single("image"), async (req,
 });
 
 // DELETE Route for Deleting a Blog by ID
-app.delete("/api/blogs/:id", authenticateToken, async (req, res) => {
+app.delete("/api/blogs/:id", authenticateSession, async (req, res) => {
   try {
-    const blog = await Blog.findByIdAndDelete(req.params.id); // Use findByIdAndDelete
+    const blog = await Blog.findByIdAndDelete(req.params.id);
     if (!blog) {
-      console.error("Blog not found:", req.params.id);
       return res.status(404).json({ error: "Blog not found" });
     }
-
     res.json({ message: "Blog deleted successfully!" });
   } catch (error) {
-    console.error("Error deleting blog:", error);
     res.status(500).json({ error: "Failed to delete blog" });
   }
 });
-
-
 
 // Seed Blogs for Testing
 const seedBlogs = async () => {
@@ -172,5 +165,5 @@ seedBlogs();
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

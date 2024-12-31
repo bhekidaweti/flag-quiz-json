@@ -7,19 +7,19 @@ function Login({ setToken }) {
   const [password, setPassword] = useState(process.env.REACT_APP_USERNAME || '');
   const [error, setError] = useState('');
 
-  const handleLogin = async (e) => {
+const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/login`, {
-        username,
-        password,
-      });
-      setToken(response.data.token); // Save token in parent component
-    } catch (err) {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/login`,
+      { username, password });
+      if (response.status === 200) {
+        setToken(true);
+      }
+    } catch (error) {
       setError('Invalid username or password');
-    }
-  };
+    };
+}
 
   return (
     <div className="mb-3">
