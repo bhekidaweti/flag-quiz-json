@@ -45,14 +45,14 @@ function AdminPostForm({ token }) {
           `${API_URL}/api/blogs/${editingBlog._id}`,
           formData,
           {
-            headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
+            headers: { "Content-Type": "multipart/form-data" },
           }
         );
         setMessage(response.data.message);
       } else {
         // Create new blog
         const response = await axios.post(`${API_URL}/api/blogs`, formData, {
-          headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
+          headers: { "Content-Type": "multipart/form-data" },
         });
         setMessage(response.data.message);
       }
@@ -82,7 +82,7 @@ function AdminPostForm({ token }) {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(`${API_URL}/api/blogs/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${SESSION_SECRET}` },
       });
       setMessage(response.data.message);
       fetchBlogs(); // Refresh the list of blogs
