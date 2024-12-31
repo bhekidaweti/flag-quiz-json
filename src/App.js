@@ -52,7 +52,7 @@ const App = () => {
                   token ? <AdminPostForm token={token} /> : <Login setToken={setToken} />
                 }
               />
-              <Route path="login" element={<Login setToken={setToken} />} />
+              <Route path="/login" element={<Login setToken={setToken} />} />
             </Routes>
         </div>
 
