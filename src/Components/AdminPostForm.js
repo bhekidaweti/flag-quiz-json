@@ -5,7 +5,7 @@ import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import ReactMarkdown from 'react-markdown';  // To render markdown content
 
-function AdminPostForm({ token }) {
+function AdminPostForm() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");  // Content for Markdown
   const [message, setMessage] = useState("");
@@ -81,9 +81,7 @@ function AdminPostForm({ token }) {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`${API_URL}/api/blogs/${id}`, {
-        headers: { Authorization: `Bearer ${SESSION_SECRET}` },
-      });
+      const response = await axios.delete(`${API_URL}/api/blogs/${id}`);
       setMessage(response.data.message);
       fetchBlogs(); // Refresh the list of blogs
     } catch (error) {
