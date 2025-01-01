@@ -30,7 +30,7 @@ function AdminPostForm() {
 
   useEffect(() => {
     fetchBlogs();
-  }, []);
+  }, [fetchBlogs]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
