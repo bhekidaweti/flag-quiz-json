@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
@@ -17,7 +17,7 @@ function AdminPostForm() {
 
   const API_URL = process.env.REACT_APP_API_URL
 
-  const fetchBlogs = async () => {
+  const fetchBlogs = useCallback (async () => {
     try {
       const response = await axios.get(`${API_URL}/api/blogs`, {
         headers: { "Content-Type": "application/json" }
@@ -26,7 +26,7 @@ function AdminPostForm() {
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
-  };
+  }, [API_URL]);
 
   useEffect(() => {
     fetchBlogs();
