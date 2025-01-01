@@ -7,14 +7,17 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const path = require("path");
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
 // Middleware setup
 app.use(cors({ origin: 'https://funwithworldflags.com',
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], allowedHeaders: ['Content-Type', 'Authorization'] }));
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'] }));
 app.use(bodyParser.json()); // For parsing application/json
+app.use(cookieParser());
 
 
 // Session Setup
@@ -22,7 +25,12 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 3600000 }, // 1 hour
+  cookie: { 
+    httpOnly: true, 
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none',
+    maxAge: 3600000 // 1 hour
+  }, 
 }));
 
 const adminUsername = process.env.REACT_APP_USERNAME;
@@ -44,6 +52,14 @@ const blogSchema = new mongoose.Schema({
 
 const Blog = mongoose.model("Blog", blogSchema);
 
+// Middleware to check for session authentication
+const authenticateSession = (req, res, next) => {
+  if (!req.session.user) {
+    return res.status(401).send('Unauthorized');
+  }
+  next();
+};
+
 // POST Route for login
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
@@ -58,14 +74,6 @@ app.post("/api/login", async (req, res) => {
   }
   return res.status(401).json({ error: "Invalid username or password" });
 });
-
-// Middleware to check for session authentication
-const authenticateSession = (req, res, next) => {
-  if (!req.session.user) {
-    return res.status(401).send('Unauthorized');
-  }
-  next();
-};
 
 // Multer Configuration
 const storage = multer.diskStorage({
