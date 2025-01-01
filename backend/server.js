@@ -28,9 +28,7 @@ app.use(session({
   cookie: { 
     httpOnly: true, 
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'none',
-    maxAge: 3600000 // 1 hour
-  }, 
+    maxAge: 3600000 }, // 1 hour
 }));
 
 const adminUsername = process.env.REACT_APP_USERNAME;
@@ -52,14 +50,6 @@ const blogSchema = new mongoose.Schema({
 
 const Blog = mongoose.model("Blog", blogSchema);
 
-// Middleware to check for session authentication
-const authenticateSession = (req, res, next) => {
-  if (!req.session.user) {
-    return res.status(401).send('Unauthorized');
-  }
-  next();
-};
-
 // POST Route for login
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
@@ -74,6 +64,14 @@ app.post("/api/login", async (req, res) => {
   }
   return res.status(401).json({ error: "Invalid username or password" });
 });
+
+// Middleware to check for session authentication
+const authenticateSession = (req, res, next) => {
+  if (!req.session.user) {
+    return res.status(401).send('Unauthorized');
+  }
+  next();
+};
 
 // Multer Configuration
 const storage = multer.diskStorage({
