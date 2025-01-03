@@ -48,7 +48,7 @@ function AdminPostForm() {
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
-            withCredentials: true,
+            //withCredentials: true,
           }
         );
         setMessage(response.data.message);
@@ -56,7 +56,7 @@ function AdminPostForm() {
         // Create new blog
         const response = await axios.post(`${API_URL}/api/blogs`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true,
+          //withCredentials: true,
         });
         setMessage(response.data.message);
       }
@@ -86,7 +86,7 @@ function AdminPostForm() {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(`${API_URL}/api/blogs/${id}`,
-        {withCredentials: true});
+        /*{withCredentials: true}*/);
       setMessage(response.data.message);
       fetchBlogs(); // Refresh the list of blogs
     } catch (error) {

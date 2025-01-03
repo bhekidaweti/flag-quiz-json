@@ -3,25 +3,25 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const multer = require('multer');
-const session = require('express-session');
+//const session = require('express-session');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const path = require("path");
-const cookieParser = require('cookie-parser');
+//const cookieParser = require('cookie-parser');
 
 const app = express();
 
 // Middleware setup
 app.use(cors({ origin: 'https://funwithworldflags.com',
-  credentials: true,
+  //credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'] }));
+  allowedHeaders: ['Content-Type' /*'Authorization'*/]}));
 app.use(bodyParser.json()); // For parsing application/json
-app.use(cookieParser());
+//app.use(cookieParser());
 
 
 // Session Setup
-app.use(session({
+/*app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
@@ -30,7 +30,7 @@ app.use(session({
     sameSite: 'none',
     secure: process.env.NODE_ENV === 'production',
     maxAge: 3600000 }, // 1 hour
-}));
+}));*/
 
 const adminUsername = process.env.REACT_APP_USERNAME;
 const adminHashedPassword = process.env.REACT_APP_PASSWORD; 
@@ -59,7 +59,7 @@ app.post("/api/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, adminHashedPassword);
     if (isMatch) {
       // Set user session
-      req.session.user = { username }; // Save session data
+      //req.session.user = { username }; // Save session data
       return res.status(200).json({ message: "Logged in successfully" });
     }
   }
@@ -67,12 +67,12 @@ app.post("/api/login", async (req, res) => {
 });
 
 // Middleware to check for session authentication
-const authenticateSession = (req, res, next) => {
+/*const authenticateSession = (req, res, next) => {
   if (!req.session.user) {
     return res.status(401).send('Unauthorized');
   }
   next();
-};
+};*/
 
 // Multer Configuration
 const storage = multer.diskStorage({
@@ -85,7 +85,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // POST Route for Creating a Blog
-app.post("/api/blogs", authenticateSession, upload.single("image"), async (req, res) => {
+app.post("/api/blogs", /*authenticateSession*/ upload.single("image"), async (req, res) => {
   try {
     const { title, content } = req.body;
     const image = req.file ? `/uploads/${req.file.filename}` : null;
@@ -122,7 +122,7 @@ app.get("/api/blogs/:id", async (req, res) => {
 });
 
 // PUT Route for Updating a Blog by ID
-app.put("/api/blogs/:id", authenticateSession, upload.single("image"), async (req, res) => {
+app.put("/api/blogs/:id", /*authenticateSession,*/ upload.single("image"), async (req, res) => {
   try {
     const { title, content } = req.body;
     const image = req.file ? `/uploads/${req.file.filename}` : null;
@@ -144,7 +144,7 @@ app.put("/api/blogs/:id", authenticateSession, upload.single("image"), async (re
 });
 
 // DELETE Route for Deleting a Blog by ID
-app.delete("/api/blogs/:id", authenticateSession, async (req, res) => {
+app.delete("/api/blogs/:id", /*authenticateSession,*/ async (req, res) => {
   try {
     const blog = await Blog.findByIdAndDelete(req.params.id);
     if (!blog) {
