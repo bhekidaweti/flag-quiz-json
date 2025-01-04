@@ -3,6 +3,7 @@ import { flags } from './flag-obj';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faPause, faPlay, faStar, faStop } from '@fortawesome/free-solid-svg-icons';
+import { Helmet } from 'react-helmet';
 
 const Quiz = ( { onNavigate } ) => {
   const [score, setScore] = useState(parseInt(sessionStorage.getItem('score')) || 0);
@@ -114,7 +115,13 @@ const Quiz = ( { onNavigate } ) => {
 
   return (
     <div className="container quiz-container">
-      <h1>Flag Quiz</h1>
+      <Helmet>
+        <title>Flag Quiz - Test Your Knowledge!</title>
+        <meta name="description" content="Welcome to the Flag Quiz! Challenge yourself to identify flags from around the world." />
+        <meta property="og:title" content="Flag Quiz - Test Your Knowledge!" />
+        <meta property="og:description" content="Can you name all the flags? Start the quiz now and find out!" />
+      </Helmet>
+      <h1>World Flag Quiz</h1>
       <p className="quiz-start">
         Click the correct flag from the four flags provided that correspond to the country name given below.
       </p>

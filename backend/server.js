@@ -157,7 +157,7 @@ app.delete("/api/blogs/:id", /*authenticateSession,*/ async (req, res) => {
 });
 
 // Seed Blogs for Testing
-const seedBlogs = async () => {
+/*const seedBlogs = async () => {
   const existingBlogs = await Blog.find();
   if (existingBlogs.length === 0) {
     await Blog.create({
@@ -168,7 +168,7 @@ const seedBlogs = async () => {
   }
 };
 
-seedBlogs();
+seedBlogs();*/
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

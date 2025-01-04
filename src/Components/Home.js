@@ -1,10 +1,16 @@
 import React from "react";
-//import { Link } from "react-router-dom";
+import { Helmet } from 'react-helmet';
 
 
 const Home = () => {
     return (
         <div className="container" style={{backgroundColor: "bisque"}}>
+            <Helmet>
+            <title>World Flag Quiz - Home!</title>
+            <meta name="description" content="Welcome to the Flag Quiz! Challenge yourself to identify flags from around the world." />
+            <meta property="og:title" content="World Flag Quiz - Home!" />
+            <meta property="og:description" content="Can you name all the flags? Start the quiz now and find out!" />
+          </Helmet>
                     <section className="welcome">
                         Welcome to the flags quiz game where you can test your world flags knowledge and also 
                         learn about national flags of different countries or nations.<br></br>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 
 const CountrySearch = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -48,6 +49,12 @@ const CountrySearch = () => {
 
     return (
         <div className="country-search">
+          <Helmet>
+            <title>World Data - Country Search!</title>
+            <meta name="description" content="Welcome to the World Data Country Search!" />
+            <meta property="og:title" content="World Data - Country Search!" />
+            <meta property="og:description" content="Search any country and get it's history and statistics!" />
+          </Helmet>
             <h6>Search for Country Information</h6>
             <form onSubmit={handleSearch}>
                 <input

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MarkdownIt from "markdown-it";
+import { Helmet } from 'react-helmet';
 
 
 const API_URL = process.env.REACT_APP_API_URL
@@ -29,6 +30,12 @@ function WorldArticles() {
 
   return (
     <div>
+      <Helmet>
+        <title>Flag Quiz - Knowledge Base!</title>
+        <meta name="description" content="Welcome to the Flag Quiz! Challenge yourself to identify flags from around the world." />
+        <meta property="og:title" content="Flag Quiz - Knowledge Base!" />
+        <meta property="og:description" content="Can you name all the flags? Start the quiz now and find out!" />
+      </Helmet>
       <h4>World Articles</h4>
       {blogs.map((blog) => (
         <div key={blog._id} style={{ marginBottom: "20px" }}>
