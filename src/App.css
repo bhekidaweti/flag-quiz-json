@@ -1,5 +1,6 @@
 body {
   background-color: #191f37;
+  color: white;
 }
 .App, .quiz-content, .flag-quiz, .home-container, .flag-container {
   text-align: center;
@@ -75,8 +76,8 @@ header li {
 }
 .footer{
   background-color: bisque;
-  margin-top: 40px;
-  max-height: 100px;
+  margin-top: 200px;
+  max-height: 100vh;
 }
 footer li {
   padding: 10px;

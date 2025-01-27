@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 
 const Home = () => {
     return (
-        <div className="container" style={{backgroundColor: "bisque"}}>
+        <div className="container">
             <Helmet>
             <title>World Flag Quiz - Home!</title>
             <meta name="description" content="Welcome to the Flag Quiz! Challenge yourself to identify flags from around the world." />

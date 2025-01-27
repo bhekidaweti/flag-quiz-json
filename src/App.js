@@ -20,7 +20,7 @@ const App = () => {
         <ul>
           <li style={{ float: "left", fontSize: "80px" }}>&#127988;</li>
           <li>
-            <h1>Play the world flags quiz, expand your knowledge, have fun</h1>
+            <h1 style={{color:"black"}}>Play the world flags quiz, expand your knowledge, have fun</h1>
           </li>
         </ul>
       </header>
