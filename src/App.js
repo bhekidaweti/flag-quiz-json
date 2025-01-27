@@ -36,7 +36,7 @@ const App = () => {
         </button>
       </nav>
       <div className="row align-item-start">
-        <div className="col" style={{ backgroundColor: "bisque" }}>
+        <div className="col">
           <CountrySearch />
         </div>
 
@@ -56,7 +56,7 @@ const App = () => {
             </Routes>
         </div>
 
-        <div className="col" style={{ backgroundColor: "bisque" }}>
+        <div className="col">
           <WorldArticles />
         </div>
       </div>

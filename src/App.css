@@ -1,3 +1,6 @@
+body {
+  background-color: #191f37;
+}
 .App, .quiz-content, .flag-quiz, .home-container, .flag-container {
   text-align: center;
 }
