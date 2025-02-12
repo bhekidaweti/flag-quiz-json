@@ -9,6 +9,7 @@ import CountrySearch from "./Components/CountrySearch";
 import WorldArticles from "./Components/WorldArticles";
 import AdminPostForm from "./Components/AdminPostForm";
 import Login from "./Components/Login";
+import {Helmet} from 'react-helmet';
 
 const App = () => {
   const navigate = useNavigate(); // Ensure this is inside the Router context
@@ -16,6 +17,10 @@ const App = () => {
 
   return (
     <div className="App">
+      <Helmet>
+        <meta name="robots" content="index, follow" />
+      </Helmet>
+
       <header>
         <ul>
           <li style={{ float: "left", fontSize: "80px" }}>&#127988;</li>
